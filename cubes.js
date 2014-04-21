@@ -4,18 +4,24 @@ randcolor = function() {
 }
 green = function() { return 0x00ff00; }
 blue = function() { return 0x0000ff; }
+red = function() { return 0xff0000; }
+lightGroup = function(m) {
+  return [[m,0,0], [0,m,0], [0,0,m], [-m,0,0], [0,-m,0], [0,0,-m]];
+}
+lightSingle = function(m) { return [m * 5, 0, 0]; }
+
 
 //// Cubes
-initCubes = function(n, dilation, color) {
+initCubes = function(n, dilation, lights, color) {
   return function(scene, camera, renderer) {
 
     var geometry = new THREE.CubeGeometry(1,1,1);
 
     normalizePos = function(xyz) {
-      return [ (xyz[0] - n/2) * dilation
-        , (xyz[1] - n/2) * dilation
-        , (xyz[2] - n/2) * dilation
-        ];
+      return [ (xyz[0] - n/2 + 1/2) * dilation
+             , (xyz[1] - n/2 + 1/2) * dilation
+             , (xyz[2] - n/2 + 1/2) * dilation
+             ];
     }
 
     makeCube = function(i) {
@@ -60,17 +66,17 @@ initCubes = function(n, dilation, color) {
       scene.add(light);
     }
 
-    addLights = function() {
+    addLights = function(lights) {
       var m = n * 1.5;
-      _.each([[m,0,0], [0,m,0], [0,0,m], [-m,0,0], [0,-m,0], [0,0,-m]], addLight);
+      _.each(lights(m), addLight);
       //addLight([ n*10,0,0]);
-      //addLight([-n*10,0,0]);
+      addLight([-n*10,0,0]);
     }
 
 
     var cubes = makeCubes();
     makeCamera();
-    addLights();
+    addLights(lights);
 
     return cubes;
   }
@@ -80,8 +86,8 @@ renderCubes = function(cubes) {
   _.each(cubes, function(cube) {
     var r = Math.random();
 
-    cube.rotation.x += r * 0.1;
-    cube.rotation.y += r * 0.1;
+    cube.rotation.x += r * 0.06;
+    cube.rotation.y += r * 0.06;
   });
 }
 
