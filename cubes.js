@@ -40,7 +40,7 @@ cubes = _.map(_.range(n*n*n), makeCube);
 _.each(cubes, addCube);
 
 //// Camera
-camera.position.z = 22;
+camera.position.z = 11;
 controls = new THREE.OrbitControls( camera, renderer.domElement );
 
 //// Light
